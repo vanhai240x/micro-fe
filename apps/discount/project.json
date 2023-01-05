@@ -1,0 +1,110 @@
+{
+  "name": "discount",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/discount/src",
+  "prefix": "micro-frontend-demo",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/discount",
+        "index": "apps/discount/src/index.html",
+        "main": "apps/discount/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/discount/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/discount/src/favicon.ico", "apps/discount/src/assets"],
+        "styles": ["apps/discount/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/discount/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/discount/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nrwl/angular:webpack-dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "discount:build:production"
+        },
+        "development": {
+          "browserTarget": "discount:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4206,
+        "publicHost": "http://localhost:4206"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "discount:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/discount/**/*.ts", "apps/discount/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/discount/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/angular:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "discount:build",
+        "port": 4206
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "discount:build:development"
+        },
+        "production": {
+          "buildTarget": "discount:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
